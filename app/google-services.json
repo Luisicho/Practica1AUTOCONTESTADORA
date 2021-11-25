@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "777976355701",
+    "project_id": "practica1autocontestadora",
+    "storage_bucket": "practica1autocontestadora.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777976355701:android:82fdd6bf8cfd5327b6913c",
+        "android_client_info": {
+          "package_name": "mx.ittepic.tepic.lmhm.ladm_u4_practica1_autocontesta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777976355701-7k83gse1kp2u5odfail9os73h61rokou.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBT_0buzFE_e3vHZZlUG8C0Qiijx3zATc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777976355701-7k83gse1kp2u5odfail9os73h61rokou.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
