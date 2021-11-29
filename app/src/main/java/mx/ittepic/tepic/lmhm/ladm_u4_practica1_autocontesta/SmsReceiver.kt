@@ -32,6 +32,7 @@ class SmsReceiver: BroadcastReceiver() {
                     var SQL = "INSERT INTO LISTANEGRA VALUES ('${celularOrigen}','${contenidoSMS}')"
                     insertar.execSQL(SQL)
                     baseDatos.close()
+
                 }catch (err: SQLiteException){
                     Toast.makeText(context,"Error ${err.message}", Toast.LENGTH_LONG)
                 }
