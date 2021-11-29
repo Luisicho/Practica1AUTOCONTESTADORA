@@ -11,6 +11,7 @@ import android.widget.Toast
 class SmsReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val extras = intent.extras
+
         if (extras != null){
             var sms = extras.get("pdus") as Array<Any>
             for (indice in sms.indices){
@@ -23,6 +24,7 @@ class SmsReceiver: BroadcastReceiver() {
                 }
                 var celularOrigen = smsMensaje.originatingAddress
                 var contenidoSMS = smsMensaje.messageBody.toString()
+
                 //GUARDAR EN TABLA SQLITE
                 try {
                     var baseDatos = BaseDatos(context, "DBTELEFONOS",null,1)

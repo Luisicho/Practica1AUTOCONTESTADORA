@@ -10,18 +10,21 @@ import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CallReceiver: BroadcastReceiver() {
+    var numerotelefonico: String ? = null
     override fun onReceive(p0: Context, p1: Intent) {
         var estadollamada = false
-        var numerotelefonico = ""
+
         if (p1.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)){
             //Llamada entrante
                 //asigna numero telefonico que entro
-            numerotelefonico = p1.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER).toString()
+            numerotelefonico  = p1.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER).toString()
         }
+
         if (p1.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
             //Inicio llamada
             estadollamada = true
         }
+
         if (p1.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
             //Llamada terminada
                 //Pregunta si no contesto
@@ -47,12 +50,12 @@ class CallReceiver: BroadcastReceiver() {
                             phone.telefono = document.getString("TELEFONO")!!
                             listaNegra.add(phone)
                         }//for END
+
                         listaNegra.forEach {
                             //Verifica si esta en lista negra
                             if (it.telefono==numerotelefonico){
                                 //Envia mensaje a numero de lista negra
                                 envioSMS(true,it.telefono)
-                                Toast.makeText(p0,"Se envio el sms negro", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
@@ -67,7 +70,7 @@ class CallReceiver: BroadcastReceiver() {
                                 .show()
                             return@addSnapshotListener
                         }//if END
-                        listaNegra.clear()
+                        listaBlanca.clear()
                         //consigue lista blanca
                         for (document in querySnapshot!!) {
                             val phone = llamada(p0)
@@ -75,12 +78,11 @@ class CallReceiver: BroadcastReceiver() {
                             phone.telefono = document.getString("TELEFONO")!!
                             listaNegra.add(phone)
                         }//for END
-                        listaNegra.forEach {
+                        listaBlanca.forEach {
                             //Verifica si esta en lista negra
                             if (it.telefono==numerotelefonico){
                                 //Envia mensaje a numero de lista blanca
                                 envioSMS(false,it.telefono)
-                                Toast.makeText(p0,"Se envio el sms blanco", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
