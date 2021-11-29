@@ -27,7 +27,7 @@ class SmsReceiver: BroadcastReceiver() {
 
                 //GUARDAR EN TABLA SQLITE
                 try {
-                    var baseDatos = BaseDatos(context, "DBTELEFONOS",null,1)
+                    var baseDatos = BaseDatos(context, "-",null,1)
                     var insertar = baseDatos.writableDatabase
                     var SQL = "INSERT INTO LISTANEGRA VALUES ('${celularOrigen}','${contenidoSMS}')"
                     insertar.execSQL(SQL)
