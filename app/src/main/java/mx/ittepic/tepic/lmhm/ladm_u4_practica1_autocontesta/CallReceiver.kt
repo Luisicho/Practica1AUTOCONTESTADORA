@@ -23,18 +23,42 @@ class CallReceiver: BroadcastReceiver() {
             numerotelefonico  = p1.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER).toString()
             //Pregunta si no contesto
             if (!estadollamada) {
+                var baseRemota = FirebaseFirestore.getInstance()
                     //Busca el numero en la lista Negra
                 if (!numerotelefonico.equals("null")){
-                    if(llamada(p0).selectLN(numerotelefonico.toString())){
-                        envioSMS(true,numerotelefonico.toString())
-                    }else
-                        if(llamada(p0).selectLB(numerotelefonico.toString()))
-                            envioSMS(false,numerotelefonico.toString())
+                    baseRemota.collection("LISTANEGRA").document(numerotelefonico.toString())
+                        .addSnapshotListener { value, error ->
+
+                        if (value!!.getString("TELEFONO") != null) {
+                            Toast.makeText(p0,
+                                "se envio lista negra ${value!!.getString("TELEFONO")}",
+                                Toast.LENGTH_LONG).show()
+                            envioSMS(true,numerotelefonico.toString())
+                        }else{
+                            Toast.makeText(p0,
+                                "No se encontro ${numerotelefonico.toString()} en lista negra",
+                                Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    baseRemota.collection("LISTABLANCA").document(numerotelefonico.toString())
+                        .addSnapshotListener { value, error ->
+
+                            if (value!!.getString("TELEFONO") != null) {
+                                Toast.makeText(p0,
+                                    "se envio lista blanca ${value!!.getString("TELEFONO")}",
+                                    Toast.LENGTH_LONG).show()
+                                envioSMS(false,numerotelefonico.toString())
+                            }else{
+                                Toast.makeText(p0,
+                                    "No se encontro ${numerotelefonico.toString()} en lista blanca",
+                                    Toast.LENGTH_LONG).show()
+                            }
+                        }
                 }
             }//if !estadollamada
         }// end if
     }//end onReciver
-
+    
     private fun envioSMS(lista:Boolean,telefono:String) {
         if (lista){
             //Lista negra mensaje
