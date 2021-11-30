@@ -1,19 +1,15 @@
 package mx.ittepic.tepic.lmhm.ladm_u4_practica1_autocontesta
 
+import android.content.ContentValues
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import java.lang.Exception
 
 class llamada(p: Context) {
     var nombre = ""
     var telefono = ""
     var baseRemota = FirebaseFirestore.getInstance()
-    private lateinit var database: DatabaseReference
     var pointer = p
 
     fun insertaFirestoreListaNegra() {
@@ -48,15 +44,23 @@ class llamada(p: Context) {
     }
 
     fun selectLN(tel: String): Boolean{
+        baseRemota.collection("LISTANEGRA").document(tel).addSnapshotListener { value, error ->
+            if (!value!!.getString("TELEFONO").equals("null")){
+                val datos = ContentValues()
+                datos.put("TEL",tel)
+                BaseDatos(pointer,"TELEFONOS",null,1).writableDatabase.insert("NUMEROS",null,datos)
+            }//end if
+        }//addSnap
 
+        val cursor = BaseDatos(pointer,"TELEFONOS",null,1).readableDatabase.rawQuery("SELECT * FROM NUMEROS",null)
+        if (cursor.moveToFirst()){
+            BaseDatos(pointer,"TELEFONOS",null,1).writableDatabase.delete("NUMEROS","TEL=?",arrayOf(tel))
+            return true
+        }
         return false
     }//select
 
     fun selectLB(tel: String): Boolean{
-        database = Firebase.database.reference
-        if(database.child("LISTABLANCA").child(tel).get() != null){
-            return true
-        }
         return false
     }//select
 
