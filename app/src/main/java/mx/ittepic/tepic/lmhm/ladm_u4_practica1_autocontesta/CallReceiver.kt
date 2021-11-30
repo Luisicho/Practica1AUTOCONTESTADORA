@@ -24,12 +24,13 @@ class CallReceiver: BroadcastReceiver() {
             //Pregunta si no contesto
             if (!estadollamada) {
                     //Busca el numero en la lista Negra
-                if(llamada(p0).selectLN(numerotelefonico.toString())){
-                    envioSMS(true,numerotelefonico.toString())
-                }else
-                    if(llamada(p0).selectLB(numerotelefonico.toString()))
-                        envioSMS(false,numerotelefonico.toString())
-
+                if (!numerotelefonico.equals("null")){
+                    if(llamada(p0).selectLN(numerotelefonico.toString())){
+                        envioSMS(true,numerotelefonico.toString())
+                    }else
+                        if(llamada(p0).selectLB(numerotelefonico.toString()))
+                            envioSMS(false,numerotelefonico.toString())
+                }
             }//if !estadollamada
         }// end if
     }//end onReciver

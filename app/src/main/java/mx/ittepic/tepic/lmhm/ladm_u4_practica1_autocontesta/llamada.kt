@@ -6,8 +6,8 @@ import androidx.appcompat.app.AlertDialog
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 class llamada(p: Context) {
     var nombre = ""
@@ -48,11 +48,7 @@ class llamada(p: Context) {
     }
 
     fun selectLN(tel: String): Boolean{
-        database = Firebase.database.reference
-        if(database.child("LISTANEGRA").child(tel).get() != null){
-            Toast.makeText(p0,)
-            return true
-        }
+
         return false
     }//select
 
