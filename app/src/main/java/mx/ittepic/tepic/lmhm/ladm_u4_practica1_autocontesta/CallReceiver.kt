@@ -17,72 +17,19 @@ class CallReceiver: BroadcastReceiver() {
         if (p1.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
             //Inicio llamada
             estadollamada = true
-
         }
 
         if (p1.getStringExtra(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_IDLE)){
             numerotelefonico  = p1.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER).toString()
-            Toast.makeText(p0,"${numerotelefonico}", Toast.LENGTH_LONG).show()
-            //Llamada terminada
-                //Pregunta si no contesto
-            if (!estadollamada){
-                //Crea instancia de firestore
-                var baseRemota = FirebaseFirestore.getInstance()
-                //Consigue la lista negra
-                var listaNegra = ArrayList<llamada>()
-                baseRemota.collection("LISTANEGRA")
-                    .addSnapshotListener { querySnapshot, error ->
-                        if (error != null) {
-                            AlertDialog.Builder(p0).setTitle("ATENCION")
-                                .setMessage(error.message!!)
-                                .setPositiveButton("OK") { s, i -> }
-                                .show()
-                            return@addSnapshotListener
-                        }//if END
-                        listaNegra.clear()
-                        //consigue lista negra
-                        for (document in querySnapshot!!) {
-                            val phone = llamada(p0)
-                            phone.nombre = document.getString("NOMBRE")!!
-                            phone.telefono = document.getString("TELEFONO")!!
-                            listaNegra.add(phone)
-                        }//for END
+            //Pregunta si no contesto
+            if (!estadollamada) {
+                    //Busca el numero en la lista Negra
+                if(llamada(p0).selectLN(numerotelefonico.toString())){
+                    envioSMS(true,numerotelefonico.toString())
+                }else
+                    if(llamada(p0).selectLB(numerotelefonico.toString()))
+                        envioSMS(false,numerotelefonico.toString())
 
-                        listaNegra.forEach {
-                            //Verifica si esta en lista negra
-                            if (it.telefono==numerotelefonico){
-                                //Envia mensaje a numero de lista negra
-                                envioSMS(true,it.telefono)
-                            }//end if
-                        }//forEach
-                    }
-                //Consigue la lista blanca
-                /*var listaBlanca = ArrayList<llamada>()
-                baseRemota.collection("LISTABLANCA")
-                    .addSnapshotListener { querySnapshot, error ->
-                        if (error != null) {
-                            AlertDialog.Builder(p0).setTitle("ATENCION")
-                                .setMessage(error.message!!)
-                                .setPositiveButton("OK") { s, i -> }
-                                .show()
-                            return@addSnapshotListener
-                        }//if END
-                        listaBlanca.clear()
-                        //consigue lista blanca
-                        for (document in querySnapshot!!) {
-                            val phone = llamada(p0)
-                            phone.nombre = document.getString("NOMBRE")!!
-                            phone.telefono = document.getString("TELEFONO")!!
-                            listaNegra.add(phone)
-                        }//for END
-                        listaBlanca.forEach {
-                            //Verifica si esta en lista negra
-                            if (it.telefono==numerotelefonico){
-                                //Envia mensaje a numero de lista blanca
-                                envioSMS(false,it.telefono)
-                            }
-                        }
-                    }*/
             }//if !estadollamada
         }// end if
     }//end onReciver
